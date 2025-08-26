@@ -12,4 +12,6 @@ joint_index = getJointIndex(joint_name, experimentData);
 temperature = getTemperatureData(joint_name, experimentData);
 timestamps = getTimestamps(experimentData);
 
-plotTemperatureData(timestamps,temperature)
+% plotTemperatureData(timestamps,temperature, joint_index, joint_name)
+
+[FOC_TDB_I2C_NACK, FOC_TDB_NO_MEAS, TDB_LOST_CONFIG, TDB_ANY_CONFIG] = diagnosticTemperature(temperature);
