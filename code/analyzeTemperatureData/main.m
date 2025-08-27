@@ -14,5 +14,5 @@ timestamps = getTimestamps(experimentData);
 
 % plotTemperatureData(timestamps,temperature, joint_index, joint_name)
 
-temperatureHardwareLimit = 55;
+temperatureHardwareLimit = 55; % Example value
 diagnostic = errorHandlingTemperature(temperature, timestamps, temperatureHardwareLimit);

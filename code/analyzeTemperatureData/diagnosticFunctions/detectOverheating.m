@@ -1,5 +1,5 @@
 function OVERHEAT = detectOverheating(temperature, timestamps, temperatureHardwareLimit)
-    
+
     n = length(temperature);
     OVERHEAT = zeros(1, n);
 
@@ -7,7 +7,7 @@ function OVERHEAT = detectOverheating(temperature, timestamps, temperatureHardwa
 
     meanSampleTime = getMeanSampleTime(timestamps); % [sec]
     requiredSamples = ceil(overheatTimeLimit / meanSampleTime);
-    
+
     % Find transitions: where temperature crosses the threshold
     aboveThreshold = temperature > temperatureHardwareLimit;
     transitions = diff([false, aboveThreshold, false]); % removes equal consecutive values leaving only state change.
@@ -19,7 +19,7 @@ function OVERHEAT = detectOverheating(temperature, timestamps, temperatureHardwa
     % Compute region lengths for all indices at once
     regionLengths = endIndices - startIndices + 1;
 
-    % Find valid regions (those that satisfy the condition)
+    % Find valid regions
     validMask = regionLengths >= requiredSamples;
 
     % Extract the valid start and end indices
