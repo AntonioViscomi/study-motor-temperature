@@ -25,6 +25,7 @@ temperature = getTemperatureData(joint_name, experimentData);
 %[text] - *Add the chance to select a specific portion of the whole experiment for the analysis* \
 temperatureHardwareLimit = 55; % Example value
 diagnostic = errorHandlingTemperature(temperature, timestamps, temperatureHardwareLimit);
+%[text] 
 %[text] Inside the fields of the diagnostic struct you will find the following sub-fields: 
 %[text] - FOC\_TDB\_I2C\_NACK
 %[text] - FOC\_TDB\_NO\_MEAS
