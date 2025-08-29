@@ -22,7 +22,7 @@ function test_errorDetection(testCase)
   verifyThatWithinTolerance(testCase, pct.TDB_ANY_CONFIG,   20, 1);
 
   % No overheating expected
-  verifyLessThanOrEqual(testCase, p.OVERHEAT, 0.1);
+  verifyLessThanOrEqual(testCase, pct.OVERHEAT, 0.1);
 
 end
 
