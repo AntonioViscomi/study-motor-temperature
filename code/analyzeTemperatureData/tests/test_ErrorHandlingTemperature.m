@@ -1,26 +1,32 @@
 function tests = test_ErrorHandlingTemperature
-% TEST_ERRORHANDLINGTEMPERATURE — Unit tests for band masks & overheating.
+% TEST_ERRORHANDLINGTEMPERATURE — Unit tests for error detection module.
 tests = functiontests(localfunctions);
 end
 
-function test_bandsSumCloseToExpected(testCase)
+function test_errorDetection(testCase)
   % Ramp from 0 to -100 °C evenly mapped over time
   t = 0:0.002:100;
   T = -t;  % °C
   thr = 55;  % well above the signal (no overheating)
+  
   D = errorHandlingTemperature(T, t, thr);
 
-  p = D.percentage;
-  % Four adjacent bands of width 20 °C each across [-90,-10] (~80 °C span)
-  % Expect roughly 20% each; tolerate numerical edge effects.
-  verifyThatWithinTolerance(testCase, p.FOC_TDB_I2C_NACK, 20, 3);
-  verifyThatWithinTolerance(testCase, p.FOC_TDB_NO_MEAS,  20, 3);
-  verifyThatWithinTolerance(testCase, p.TDB_LOST_CONFIG,  20, 3);
-  verifyThatWithinTolerance(testCase, p.TDB_ANY_CONFIG,   20, 3);
+  pct = D.percentage;
+  
+  % 20% values for each error type are expected.
+  % This derives from how errors are defined in the documentation.
+  
+  verifyThatWithinTolerance(testCase, pct.FOC_TDB_I2C_NACK, 20, 1);
+  verifyThatWithinTolerance(testCase, pct.FOC_TDB_NO_MEAS,  20, 1);
+  verifyThatWithinTolerance(testCase, pct.TDB_LOST_CONFIG,  20, 1);
+  verifyThatWithinTolerance(testCase, pct.TDB_ANY_CONFIG,   20, 1);
 
   % No overheating expected
   verifyLessThanOrEqual(testCase, p.OVERHEAT, 0.1);
+
 end
+
+
 
 % --- helper assertion ----------------------------------------------------
 function verifyThatWithinTolerance(tc, actual, expected, tol)
