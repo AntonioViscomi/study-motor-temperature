@@ -9,7 +9,7 @@ function test_errorDetection(testCase)
   T = -t;  % °C
   thr = 55;  % well above the signal (no overheating)
   
-  D = errorHandlingTemperature(T, t, thr);
+  D = errorHandlingTemperature(t, T, thr);
 
   pct = D.percentage;
   

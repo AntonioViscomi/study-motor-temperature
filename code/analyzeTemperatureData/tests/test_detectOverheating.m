@@ -13,7 +13,7 @@ function test_overheatingSynthetic(testCase)
   expected = 50; % Expected percentage of overheat.
   tol = 1; % Test successuful if pct == 50 +/- 1 [%].
 
-  [mask, R] = detectOverheating(T, t, thr);
+  [mask, R] = detectOverheating(t, T, thr);
 
   pct = 100*sum(mask)/numel(T);
 
@@ -24,7 +24,7 @@ function test_overheatingSynthetic(testCase)
   verifyEqual(testCase, length(R.endIdx), 2)
   % Visualize the information for visual check.
   figure;
-  plotOverheatingZones(T, t, mask, R, thr)
+  plotOverheatingZones(t, T, mask, R, thr)
     
 end
 

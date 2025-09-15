@@ -1,4 +1,4 @@
-function diagnostic = errorHandlingTemperature(temperature, timestamps, temperatureHardwareLimit)
+function diagnostic = errorHandlingTemperature(timestamps, temperature, temperatureHardwareLimit)
 % ERRORHANDLINGTEMPERATURE — Build masks and percentages for temperature diagnostics.
 %
 % Syntax:
@@ -26,8 +26,8 @@ function diagnostic = errorHandlingTemperature(temperature, timestamps, temperat
 % See also: detectOverheating, plotOverheatingZones
 
 arguments
-  temperature (1,:) double
   timestamps  (1,:) {mustBeVector}
+  temperature (1,:) double
   temperatureHardwareLimit (1,1) double
 end
 
@@ -42,7 +42,7 @@ mask.TDB_LOST_CONFIG  = (temperature >= -50 & temperature < -30);
 mask.TDB_ANY_CONFIG   = (temperature >= -30 & temperature < -10);
 
 % --- Overheating (temporal condition: must persist for >= 10 s) ----------
-[overMask, regions] = detectOverheating(temperature, timestamps, ...
+[overMask, regions] = detectOverheating(timestamps, temperature, ...
                                         temperatureHardwareLimit);
 mask.OVERHEAT = overMask;
 
