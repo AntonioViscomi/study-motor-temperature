@@ -1,4 +1,4 @@
-function plotOverheatingZones(temperature, timestamps, overMask, regions, threshold)
+function plotOverheatingZones(timestamps, temperature, overMask, regions, threshold)
 % PLOTOVERHEATINGZONES — Overlay overheating segments on temperature plot.
 %
 % Syntax:
@@ -17,8 +17,8 @@ function plotOverheatingZones(temperature, timestamps, overMask, regions, thresh
 % See also: detectOverheating
 
 arguments
-  temperature (1,:) double
   timestamps  {mustBeVector}
+  temperature (1,:) double
   overMask    (1,:) logical
   regions     table
   threshold   (1,1) double = NaN
