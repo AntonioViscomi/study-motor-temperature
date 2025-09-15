@@ -15,7 +15,7 @@
   * [getTimestamps](#gettimestamps)
 * [Utilities](#utilities)
 
-  * [buildMarkDownTable](#buildmarkdowntable)
+  * [printDiagnosticMarkDown](#printdiagnosticmarkdown)
 * [Visualization](#visualization)
 
   * [plotOverheatingZones](#plotoverheatingzones)
@@ -268,7 +268,7 @@ t = getTimestamps(S);
 
 ## Utilities
 
-### buildMarkDownTable
+### printDiagnosticMarkDown
 
 **Purpose**
 Generate a Markdown table summarizing diagnostic percentages.
@@ -276,17 +276,18 @@ Generate a Markdown table summarizing diagnostic percentages.
 **Syntax**
 
 ```matlab
-buildMarkDownTable(diagnostic)
+printDiagnosticMarkDown(timestamps, diagnostic)
 ```
 
 **Parameters**
 
 * `diagnostic` (struct): Output from `errorHandlingTemperature`.
+* `timestamps` (double vector): Time normalized to start at zero.
 
 **Example Usage**
 
 ```matlab
-buildMarkDownTable(D);
+printDiagnosticMarkDown(t, D);
 ```
 
 **Output Example**
@@ -294,13 +295,23 @@ buildMarkDownTable(D);
 ```markdown
 ### Temperature data diagnostic report
 
-| Error Type             | Percentage |
-|------------------------|-----------:|
-| FOC_TDB_I2C_NACK       |     20.00% |
-| FOC_TDB_NO_MEAS        |     20.00% |
-| TDB_LOST_CONFIG        |     20.00% |
-| TDB_ANY_CONFIG         |     20.00% |
-| OVERHEAT               |      0.00% |
+=== Diagnostic Percentages ===
++----------------------+----------------+
+| Condition            | Percentage [%] |
++----------------------+----------------+
+| FOC_TDB_I2C_NACK     |           0.00 |
+| FOC_TDB_NO_MEAS      |           0.00 |
+| TDB_LOST_CONFIG      |           0.00 |
+| TDB_ANY_CONFIG       |           0.00 |
+| OVERHEAT             |          46.51 |
++----------------------+----------------+
+
+=== Overheat Regions ===
++-----------+-----------+------------------+--------------+
+| StartIdx  | EndIdx    | Length [samples] | Duration [s] |
++-----------+-----------+------------------+--------------+
+|     34956 |     65345 |            30390 |        64.22 |
++-----------+-----------+------------------+--------------+
 ```
 
 ---
