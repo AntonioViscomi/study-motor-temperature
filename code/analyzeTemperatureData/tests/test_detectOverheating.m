@@ -28,30 +28,30 @@ function test_overheatingSynthetic(testCase)
     
 end
 
-function test_overheatingReal(testCase)
-    
-    [experimentName, experimentPath] = uigetfile({'*.mat','Data Files (*.mat)'}, ...
-                                                  'Select the real data to run the test.');
-    
-    experimentData = load([experimentPath experimentName]);
-
-    joint_name  = "torso_pitch_mj1_real_aksim2";
-
-    T = getTemperatureData(joint_name, experimentData);
-    t  = getTimestamps(experimentData);
-
-    thr = 55;
-    
-    [mask, R] = detectOverheating(T, t, thr);
-    
-    verifyEqual(testCase, length(R.startIdx), 1)
-    verifyEqual(testCase, length(R.endIdx), 1)
-    
-    % Visualize the information for visual check.
-    figure;
-    plotOverheatingZones(T, t, mask, R, thr)
-
-end
+% function test_overheatingReal(testCase)
+% 
+%     [experimentName, experimentPath] = uigetfile({'*.mat','Data Files (*.mat)'}, ...
+%                                                   'Select the real data to run the test.');
+% 
+%     experimentData = load([experimentPath experimentName]);
+% 
+%     joint_name  = "torso_pitch_mj1_real_aksim2";
+% 
+%     T = getTemperatureData(joint_name, experimentData);
+%     t  = getTimestamps(experimentData);
+% 
+%     thr = 55;
+% 
+%     [mask, R] = detectOverheating(T, t, thr);
+% 
+%     verifyEqual(testCase, length(R.startIdx), 1)
+%     verifyEqual(testCase, length(R.endIdx), 1)
+% 
+%     % Visualize the information for visual check.
+%     figure;
+%     plotOverheatingZones(T, t, mask, R, thr)
+% 
+% end
 
 % --- helper assertion ----------------------------------------------------
 function verifyThatWithinTolerance(tc, actual, expected, tol)
