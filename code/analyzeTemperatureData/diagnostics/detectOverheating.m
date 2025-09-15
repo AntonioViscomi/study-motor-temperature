@@ -1,4 +1,4 @@
-function [mask, regions] = detectOverheating(temperature, timestamps, threshold)
+function [mask, regions] = detectOverheating(timestamps, temperature, threshold)
 % DETECTOVERHEATING — Mark contiguous ≥ threshold regions that last ≥10 s.
 %
 % Syntax:
@@ -23,8 +23,8 @@ function [mask, regions] = detectOverheating(temperature, timestamps, threshold)
 %   [m, R] = detectOverheating(T, t, 55);
 
 arguments
-  temperature (1,:) double
   timestamps  (1,:) {mustBeVector}
+  temperature (1,:) double
   threshold   (1,1) double
 end
 

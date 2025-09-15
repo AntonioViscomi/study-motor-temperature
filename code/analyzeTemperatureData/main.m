@@ -24,3 +24,20 @@ addpath(genpath('.'))
                                                   'Select the real data to run the test.');
 
 experimentData = load([experimentPath experimentName]);
+%%
+timestamps = getTimestamps(experimentData);
+
+% The joint names are listed inside the "description list" section of the
+% experiment data (experimentData -> experiment Name -> description_list).
+joint_name = 'torso_pitch_mj1_real_aksim2';
+joint_index = getJointIndex(joint_name, experimentData);
+
+temperature = getTemperatureData('torso_pitch_mj1_real_aksim2', experimentData);
+
+plotTemperatureData(timestamps, temperature, joint_index, joint_name)
+
+thr = 31;
+
+[mask, regions] = detectOverheating(timestamps, temperature, thr);
+
+plotOverheatingZones(timestamps, temperature, mask, regions)
