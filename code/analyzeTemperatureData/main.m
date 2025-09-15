@@ -36,8 +36,12 @@ temperature = getTemperatureData('torso_pitch_mj1_real_aksim2', experimentData);
 
 plotTemperatureData(timestamps, temperature, joint_index, joint_name)
 
-thr = 31;
+temperatureHardwareLimit = 31;
 
-[mask, regions] = detectOverheating(timestamps, temperature, thr);
+diagnostic = errorHandlingTemperature(timestamps, temperature, temperatureHardwareLimit);
 
-plotOverheatingZones(timestamps, temperature, mask, regions)
+printDiagnosticMarkdown(timestamps, diagnostic)
+
+[mask, regions] = detectOverheating(timestamps, temperature, temperatureHardwareLimit);
+
+plotOverheatingZones(timestamps, temperature, mask, regions);
