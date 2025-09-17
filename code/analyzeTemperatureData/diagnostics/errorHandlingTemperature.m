@@ -36,10 +36,17 @@ end
 % -70 : no reading for 10 consecutive seconds
 % -50 : TDB lost given configuration (fallback to default)
 % -30 : TDB any configuration different from desired/default
-mask.FOC_TDB_I2C_NACK = (temperature >= -90 & temperature < -70);
-mask.FOC_TDB_NO_MEAS  = (temperature >= -70 & temperature < -50);
-mask.TDB_LOST_CONFIG  = (temperature >= -50 & temperature < -30);
-mask.TDB_ANY_CONFIG   = (temperature >= -30 & temperature < -10);
+
+isInNegativeBand = @(temp, center) (abs(temp - center) <= 5) & (temp < 0);
+
+mask.FOC_TDB_I2C_NACK = isInNegativeBand(temperature, -90);
+mask.FOC_TDB_NO_MEAS  = isInNegativeBand(temperature, -70);
+mask.TDB_LOST_CONFIG  = isInNegativeBand(temperature, -50);
+mask.TDB_ANY_CONFIG   = isInNegativeBand(temperature, -30);
+
+errorsMask = mask.FOC_TDB_I2C_NACK | mask.FOC_TDB_NO_MEAS | mask.TDB_LOST_CONFIG | mask.TDB_ANY_CONFIG;
+
+mask.GENERIC_NEGATIVE_TEMPERATURE = (temperature < 0) & ~errorsMask;
 
 % --- Overheating (temporal condition: must persist for >= 10 s) ----------
 [overMask, regions] = detectOverheating(timestamps, temperature, ...
@@ -49,11 +56,12 @@ mask.OVERHEAT = overMask;
 % --- Percentages ----------------------------------------------------------
 N = numel(temperature) -1;  % using sample count is robust to NaNs in masks
 pct = struct();
-pct.FOC_TDB_I2C_NACK = 100 * sum(mask.FOC_TDB_I2C_NACK) / N;
-pct.FOC_TDB_NO_MEAS  = 100 * sum(mask.FOC_TDB_NO_MEAS)  / N;
-pct.TDB_LOST_CONFIG  = 100 * sum(mask.TDB_LOST_CONFIG)  / N;
-pct.TDB_ANY_CONFIG   = 100 * sum(mask.TDB_ANY_CONFIG)   / N;
-pct.OVERHEAT         = 100 * sum(mask.OVERHEAT)         / N;
+pct.FOC_TDB_I2C_NACK                = 100 * sum(mask.FOC_TDB_I2C_NACK) / N;
+pct.FOC_TDB_NO_MEAS                 = 100 * sum(mask.FOC_TDB_NO_MEAS)  / N;
+pct.TDB_LOST_CONFIG                 = 100 * sum(mask.TDB_LOST_CONFIG)  / N;
+pct.TDB_ANY_CONFIG                  = 100 * sum(mask.TDB_ANY_CONFIG)   / N;
+pct.GENERIC_NEGATIVE_TEMPERATURE    = 100 * sum(mask.GENERIC_NEGATIVE_TEMPERATURE)   / N;
+pct.OVERHEAT                        = 100 * sum(mask.OVERHEAT)         / N;
 
 % --- Bundle result --------------------------------------------------------
 diagnostic.mask      = mask;
