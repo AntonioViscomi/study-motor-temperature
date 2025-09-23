@@ -32,11 +32,14 @@ function [mask, regions] = detectOverheating(timestamps, temperature)
     meanSampleTime = mean(diff(timestamps));       % [s]
     requiredSamples = max(1, ceil(overheatTimeLimit / meanSampleTime));
     
-    % Request the threshold limit to the user
-    % threshold = 
-    
-    global threshold;
-    askThreshold();
+    if ~isempty(getenv("CI"))
+        % Running under CI (no GUI available)
+        global threshold;
+        threshold = 0;
+    else
+        global threshold;
+        askThreshold();
+    end
 
     if isempty(threshold)
         disp('User canceled threshold input.');
