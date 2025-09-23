@@ -18,9 +18,31 @@
 % temperature = 95*sin(2*pi*timestamps/250);   % °C, synthetic
 % temperatureHardwareLimit = 0;                % Example threshold (°C)
 
-includePaths;
-experimentData = loadData;
+addpath(genpath('.'))
+
+%% Load data
+[experimentName, experimentPath] = uigetfile({'*.mat','Data Files (*.mat)'}, ...
+                                                  'Select the real data to run the test.');
+
+experimentData = load([experimentPath experimentName]);
+
+%% Get data
+
+timestamps = getTimestamps(experimentData);
+
+% The joint names are listed inside the "description list" section of the
+% experiment data (experimentData -> experiment Name -> description_list).
+
 joint_name = 'torso_pitch_mj1_real_aksim2';
-extractData(experimentData, joint_name);
+joint_index = getJointIndex(joint_name, experimentData);
 
+temperature = getTemperatureData('torso_pitch_mj1_real_aksim2', experimentData);
 
+%% Process data
+plotTemperatureData(timestamps, temperature, joint_index, joint_name)
+
+diagnostic = errorHandlingTemperature(timestamps, temperature);
+
+printDiagnosticMarkdown(timestamps, diagnostic)
+
+plotOverheatingZones(timestamps, temperature, diagnostic.mask.OVERHEAT, diagnostic.regions.OVERHEAT);
