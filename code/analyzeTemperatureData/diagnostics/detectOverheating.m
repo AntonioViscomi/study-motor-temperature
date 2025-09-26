@@ -32,12 +32,14 @@ function [mask, regions] = detectOverheating(timestamps, temperature)
     meanSampleTime = mean(diff(timestamps));       % [s]
     requiredSamples = max(1, ceil(overheatTimeLimit / meanSampleTime));
     
+    global threshold;
     if ~isempty(getenv("CI"))
+        
         % Running under CI (no GUI available)
-        global threshold;
-        threshold = 0;
+        
+        threshold = 30;
     else
-        global threshold;
+        
         askThreshold();
     end
 
@@ -48,7 +50,7 @@ function [mask, regions] = detectOverheating(timestamps, temperature)
 
     if threshold <= max(temperature)
         above = temperature > threshold;
-        
+
         % Find all contiguous true runs.
         d = diff([false above false]);               % 1 at rising edge, -1 at falling
         starts = find(d == 1);

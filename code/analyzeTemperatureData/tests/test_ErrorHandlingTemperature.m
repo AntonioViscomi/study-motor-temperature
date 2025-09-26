@@ -20,8 +20,8 @@ function test_errorDetection(testCase)
   
   % -------------------------------
   % CI-safe: prevent askThreshold GUI from opening
-  global threshold
-  threshold = 30;  % fixed threshold for automated tests
+  % global threshold
+  % threshold = 30;  % fixed threshold for automated tests
   % -------------------------------
 
   % Run detection
