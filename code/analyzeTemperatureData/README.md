@@ -1,87 +1,51 @@
-# Temperature Analysis & Diagnostics in MATLAB
+# README.md
 
-## Overview
+# Temperature Analysis Diagnostics in MATLAB
 
-This repository provides a set of MATLAB tools for analyzing temperature data from the robometry `.mat` file output.
-It focuses on two main aspects:
+This MATLAB package provides a suite of functions to analyze, visualize, and diagnose motor and sensor temperature data. It can detect overheating events, flag negative temperature diagnostic bands (including generic negative readings), and produce plots and structured Markdown reports.
 
-1. **Overheating Detection** – identifying when components exceed safe temperature thresholds.
-2. **Error Handling & Diagnostics** – detecting and quantifying abnormal sensor or communication states.
+## Index
+- [Overview](#overview)
+- [Workflow](#workflow)
+- [Core Functions](#core-functions)
+- [Diagnostic Bands](#diagnostic-bands)
+- [Getting Started](#getting-started)
+- [Contact](#contact)
 
-The codebase also includes **visualization utilities** and a **unit test suite** to validate functionality on both synthetic and real datasets.
+## [Overview](#overview)
+This repository is aimed at extracting, analyzing, and visualizing temperature signals from robot experiments, with a focus on robust handling of negative temperature codes as well as detection of persistent overheating.
 
----
+## [Workflow](#workflow)
+1. Load experimental data from `.mat` files and threshold using UI dialogs.
+2. Select target joint.
+3. Extract temperature vectors.
+4. Analyze for overheating and diagnostic.
+5. Visualize results & display reports.
+6. Validate analysis via supplied test suite.
 
-## Features
+## [Core Functions](#core-functions)
+- `detectOverheating`: Marks regions exceeding threshold for ≥10 s, returns boolean mask + intervals table.
+- `errorHandlingTemperature`: Flags special diagnostic values and *generic negative values* (temp < 0 °C).
+- `plotTemperatureData`, `plotOverheatingZones`: Visualization tools.
+- `printDiagnosticMarkdown`: Outputs markdown tables for easy documentation.
+- `main`, `test_Runner`: Example pipeline and test suite entry point.
 
-### Overheating Detection
+## [Diagnostic Bands](#diagnostic-bands)
+All bands are implemented in `errorHandlingTemperature`:
+- **FOC\_TDB\_I2C\_NACK**: Centered at –90 °C, flags I2C NACK events.
+- **FOC\_TDB\_NO\_MEAS**: Centered at –70 °C, flags missing measurements (≥10 s).
+- **TDB\_LOST\_CONFIG**: Centered at –50 °C, flags configuration loss.
+- **TDB\_ANY\_CONFIG**: Centered at –30 °C, flags unexpected config.
+- **GENERIC\_NEGATIVE\_TEMPERATURE**: Any value < 0 °C *not* flagged by the above bands.
+- **OVERHEAT**: Regions exceeding user threshold for temporal persistence.
 
-* Detect continuous regions where temperature exceeds a user-defined threshold.
-* Compute the percentage of time spent in overheating.
-* Visualize overheating periods on top of the temperature signal.
+The percentage of data in each band is computed and reported.
 
-### Error Handling & Diagnostics
+## [Getting Started](#getting-started)
+- Add the repository to your MATLAB path (run the main script or use `includePaths`).
+- Use `main` for a demonstration run.
+- See [analyze_temperature_data.md](analyze_temperature_data.md) for API reference.
+- Run `test_Runner` for test coverage.
 
-* Detect diagnostic bands representing hardware or sensor issues:
-
-  * **FOC\_TDB\_I2C\_NACK** (−90 °C to −70 °C)
-  * **FOC\_TDB\_NO\_MEAS** (−70 °C to −50 °C)
-  * **TDB\_LOST\_CONFIG** (−50 °C to −30 °C)
-  * **TDB\_ANY\_CONFIG** (−30 °C to −10 °C)
-* Quantify the percentage of time the system spends in each diagnostic state.
-* Combine results with overheating detection for a full diagnostic profile.
-
-### Visualization
-
-* Overlay overheating regions on temperature plots.
-* Produce clear diagnostic plots for validation and reporting.
-
-### Testing
-
-* Synthetic tests (sinusoidal and linear ramps).
-* Real-data tests using `.mat` experiment files.
-* Automatic percentage/tolerance checks for reliability.
-* `test_Runner.m` script to run the entire suite.
-
----
-
-## Example Usage
-
-```matlab
-% Load your experimental data
-load('experimentData.mat');
-
-% Extract temperature and time
-T = getTemperatureData("torso_pitch_mj1_real_aksim2", experimentData);
-t = getTimestamps(experimentData);
-
-% Detect overheating
-thr = 55; % °C threshold
-[R, pctOver] = detectOverheating(T, t, thr);
-
-% Handle error diagnostics
-pctDiag = errorHandlingTemperature(T, t, thr);
-
-% Plot overheating regions
-plotOverheatingZones(T, t, R);
-```
-
----
-
-## Getting Started
-
-1. Clone this repository.
-2. Open the main script from `\study-motor-temperature\code\analyzeTemperatureData` to include all the code in the MATLAB path.
-3. Run tests to confirm setup:
-
-   ```matlab
-   test_Runner
-   ```
-
----
-
-## Notes
-
-* Some tests are interactive (`uigetfile` prompts for `.mat` input).
-* Visualization functions produce figures for manual inspection.
-* Can be integrated into larger control or diagnostic frameworks for robotics, embedded systems, or experimental setups.
+## [Contact](#contact)
+For issues, bug reports, or enhancement requests, please contact the repository maintainer.
