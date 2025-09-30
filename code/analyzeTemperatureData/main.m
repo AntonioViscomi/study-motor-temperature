@@ -20,34 +20,29 @@
 
 addpath(genpath('.'))
 
-%%
+%% Load data
 [experimentName, experimentPath] = uigetfile({'*.mat','Data Files (*.mat)'}, ...
                                                   'Select the real data to run the test.');
 
 experimentData = load([experimentPath experimentName]);
 
-% Request the threshold limit to the user
-temperatureHardwareLimit = askThreshold();
+%% Get data
 
-
-%%
 timestamps = getTimestamps(experimentData);
 
 % The joint names are listed inside the "description list" section of the
 % experiment data (experimentData -> experiment Name -> description_list).
+
 joint_name = 'torso_pitch_mj1_real_aksim2';
 joint_index = getJointIndex(joint_name, experimentData);
 
 temperature = getTemperatureData('torso_pitch_mj1_real_aksim2', experimentData);
 
+%% Process data
 plotTemperatureData(timestamps, temperature, joint_index, joint_name)
 
-
-
-diagnostic = errorHandlingTemperature(timestamps, temperature, temperatureHardwareLimit);
+diagnostic = errorHandlingTemperature(timestamps, temperature);
 
 printDiagnosticMarkdown(timestamps, diagnostic)
 
-[mask, regions] = detectOverheating(timestamps, temperature, temperatureHardwareLimit);
-
-plotOverheatingZones(timestamps, temperature, mask, regions);
+plotOverheatingZones(timestamps, temperature, diagnostic.mask.OVERHEAT, diagnostic.regions.OVERHEAT);

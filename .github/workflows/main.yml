@@ -21,6 +21,7 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
       # Set up MATLAB and other MathWorks products on the runner.
       - name: Set up MATLAB
         uses: matlab-actions/setup-matlab@v2
@@ -34,16 +35,14 @@ jobs:
       # Run tests authored using the MATLAB unit testing framework or Simulink Test.
       - name: Run MATLAB tests
         uses: matlab-actions/run-tests@v2
-        # If you are not using a MATLAB project, add your source code to the path using the source-folder input.
+        env:                      
+          CI: true               
         with:
           test-results-junit: test-results/results.xml
           code-coverage-cobertura: code-coverage/coverage.xml
           source-folder: code/analyzeTemperatureData
 
       - name: TestForest Dashboard
-        # You may pin to the exact commit or the version.
-        # uses: test-summary/action@032c8a9cec6aaa3c20228112cae6ca10a3b29336
         uses: test-summary/action@v2.3
         with:
-          # Path(s) to test output file(s) to analyze
           paths: test-results/results.xml
