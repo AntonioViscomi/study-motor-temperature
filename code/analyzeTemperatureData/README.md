@@ -10,6 +10,8 @@ This MATLAB package provides a suite of functions to analyze, visualize, and dia
 - [Core Functions](#core-functions)
 - [Diagnostic Bands](#diagnostic-bands)
 - [Getting Started](#getting-started)
+  - [On Windows](#on-windows)
+  - [On Ubuntu](#on-ubuntu)
 - [Contact](#contact)
 
 ## [Overview](#overview)
@@ -32,7 +34,7 @@ This repository is aimed at extracting, analyzing, and visualizing temperature s
 
 ## [Diagnostic Bands](#diagnostic-bands)
 All bands are implemented in `errorHandlingTemperature`:
-- **FOC\_TDB\_I2C\_NACK**: Centered at –90 °C, flags I2C NACK events.
+- **FOC\_TDB\_I2C_NACK**: Centered at –90 °C, flags I2C NACK events.
 - **FOC\_TDB\_NO\_MEAS**: Centered at –70 °C, flags missing measurements (≥10 s).
 - **TDB\_LOST\_CONFIG**: Centered at –50 °C, flags configuration loss.
 - **TDB\_ANY\_CONFIG**: Centered at –30 °C, flags unexpected config.
@@ -42,10 +44,34 @@ All bands are implemented in `errorHandlingTemperature`:
 The percentage of data in each band is computed and reported.
 
 ## [Getting Started](#getting-started)
-- Add the repository to your MATLAB path (run the main script or use `includePaths`).
-- Use `main` for a demonstration run.
-- See [analyze_temperature_data.md](analyze_temperature_data.md) for API reference.
-- Run `test_Runner` for test coverage.
+
+Instructions vary depending on your operating system.
+
+### Windows
+1.  Add the repository folder to your MATLAB path.
+2.  Run `main` for a demonstration.
+3.  Run `test_Runner` to execute the test suite.
+
+### Ubuntu
+A potential plotting issue can arise in MATLAB versions **prior to R2025a**.
+
+**For MATLAB versions prior to R2025a:**
+
+1.  Open a terminal and navigate to the repository's root directory.
+    ```bash
+    cd repo_location/study-motor-temperature/code/analyzeTemperatureData
+    ```
+2.  Launch MATLAB using the following command:
+    ```bash
+    matlab -softwareopengl
+    ```
+3.  Once MATLAB is open, you will be in the correct folder to run the scripts. Use `main` for a demonstration.
+**For MATLAB R2025a and newer:**
+These versions should have resolved the graphics compatibility issue.
+1.  Add the repository folder to your MATLAB path.
+2.  Run `main` for a demonstration.
+---
+For more details, see the API reference in [analyze_temperature_data.md](analyze_temperature_data.md).
 
 ## [Contact](#contact)
 For issues, bug reports, or enhancement requests, please contact the repository maintainer.
